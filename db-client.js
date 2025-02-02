@@ -7,7 +7,7 @@ const client = new Client( {
 });
 await client.connect();
 
-async function addEntry(url) {
+async function add(url) {
   const randomString = new Array(8).fill(null);
 
   randomString.forEach((elem, idx, arr) => {
@@ -15,14 +15,27 @@ async function addEntry(url) {
     arr[idx] = alphabet[Math.floor(Math.random() * alphabet.length)];
   });
   const shortened = randomString.join("");
-  console.log(shortened, url);
 
- await client.query(`
+  await client.query(`
     insert into maps values ('${shortened}', '${url}');
   `);
 }
 
-await addEntry(process.argv[2]);
+//TODO: check if entry exists
+async function get(shortened) {
+  const res = await client.query(`
+    select original from maps where shortened = '${shortened}';
+  `);
+
+  return res.rows[0].original;
+}
+
+if (process.argv[2] === "get") {
+  console.log(await get(process.argv[3]));
+} 
+else if (process.argv[2] === "add") {
+  await add(process.argv[3]);
+}
 
 await client.end();
 
