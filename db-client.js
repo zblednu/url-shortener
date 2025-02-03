@@ -27,6 +27,10 @@ async function get(shortened) {
     select original from maps where shortened = '${shortened}';
   `);
 
+  if (!res.rowCount) {
+   throw new Error("no such map"); 
+  }
+
   return res.rows[0].original;
 }
 
