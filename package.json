@@ -7,10 +7,11 @@
   },
   "keywords": [],
   "author": "",
-  "type":"module",
+  "type": "module",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "express": "^4.21.2",
     "pg": "^8.13.1"
   }
 }
