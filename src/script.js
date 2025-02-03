@@ -9,7 +9,8 @@ async function Get(){
     };
     input.value = "";
     try {
-        const res = await fetch('localhost:3000', {
+        console.log(data);
+        const res = await fetch('http://localhost:3000', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'
