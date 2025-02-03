@@ -3,9 +3,31 @@ const input = document.getElementById("input");
 const button = document.getElementById("button");
 
 
-input.addEventListener ("keydown", function(event){
-    if (event.key === "Enter"){
-        button.click();
+async function Get(){
+    const data = {
+        url: input.value
+    };
+    input.value = "";
+    try {
+        const res = await fetch('localhost:3000', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data) 
+        });
+    
+        const answer = await res.json();
+        console.log(answer);
+    } catch (error) {
+        console.error('Error:', error);
     }
-})
+    
+}
 
+button.addEventListener('click', Get);
+input.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        Get(); 
+    }
+});
