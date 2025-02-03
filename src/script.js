@@ -9,7 +9,6 @@ async function Get(){
     };
     input.value = "";
     try {
-        console.log(data);
         const res = await fetch('http://localhost:3000', {
             method: 'POST', 
             headers: {
@@ -19,7 +18,8 @@ async function Get(){
         });
     
         const answer = await res.json();
-        output.value = "http://localhost:3000/" + answer;
+        console.log(answer);
+        output.textContent = "http://localhost:3000/" + answer.url;
     } catch (error) {
         console.error('Error:', error);
     }

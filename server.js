@@ -21,6 +21,16 @@ app.post("/", async (req, res) => {
   }
 });
 
+app.get("/*", async (req, res) => {
+  const shortened = req.params[0];
+  try {
+    const original = await get(shortened);
+    res.redirect(original);
+  } catch {
+    res.status(404).send();
+  }
+});
+
 app.listen(port, () => {
   console.log(`live at ${port}`);
 });
