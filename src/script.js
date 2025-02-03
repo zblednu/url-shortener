@@ -19,7 +19,7 @@ async function Get(){
         });
     
         const answer = await res.json();
-        console.log(answer);
+        output.value = "http://localhost:3000/" + answer;
     } catch (error) {
         console.error('Error:', error);
     }
