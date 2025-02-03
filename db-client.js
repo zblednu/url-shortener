@@ -11,7 +11,8 @@ await client.connect();
 function generateRandomString() {
   const alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
 
-  const randomString = new Array(8).fill(null);
+  const LENGTH = 8;
+  const randomString = new Array(LENGTH).fill(null);
   randomString.forEach((elem, idx, arr) => {
     arr[idx] = alphabet[Math.floor(Math.random() * alphabet.length)];
   });
@@ -20,6 +21,13 @@ function generateRandomString() {
 }
 
 async function add(url) {
+  const res = await client.query(`
+    select shortened from maps where original = '${url}';
+  `);
+  if (res.rowCount) {
+    return res.rows[0].shortened;
+  }
+
   let shortened;
   let exists;
   do {
