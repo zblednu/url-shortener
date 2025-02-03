@@ -7,21 +7,36 @@ const client = new Client( {
 });
 await client.connect();
 
-async function add(url) {
-  const randomString = new Array(8).fill(null);
 
+function generateRandomString() {
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
+
+  const randomString = new Array(8).fill(null);
   randomString.forEach((elem, idx, arr) => {
-    let alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
     arr[idx] = alphabet[Math.floor(Math.random() * alphabet.length)];
   });
-  const shortened = randomString.join("");
+
+  return randomString.join("");
+}
+
+async function add(url) {
+  let shortened;
+  let exists;
+  do {
+    shortened = generateRandomString();
+
+    exists = await client.query(`
+     select from maps where shortened = '${shortened}';
+    `).rowCount;
+  } while (exists);
 
   await client.query(`
     insert into maps values ('${shortened}', '${url}');
   `);
+
+  return shortened;
 }
 
-//TODO: check if entry exists
 async function get(shortened) {
   const res = await client.query(`
     select original from maps where shortened = '${shortened}';
@@ -38,7 +53,7 @@ if (process.argv[2] === "get") {
   console.log(await get(process.argv[3]));
 } 
 else if (process.argv[2] === "add") {
-  await add(process.argv[3]);
+  console.log(await add(process.argv[3]));
 }
 
 await client.end();
