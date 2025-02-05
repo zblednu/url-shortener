@@ -20,6 +20,9 @@ const server = http.createServer(async (req, res) => {
       try {
         const fileContents = fs.readFileSync(`src/${resource}`);
         res.statusCode = 200;
+        if (resource.includes("js")) {
+          res.setHeader("content-type", "text/javascript");
+        }
         res.end(fileContents);
 
       } catch(e) {
