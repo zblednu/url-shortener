@@ -2,15 +2,30 @@
     border: 1px solid black;
     height: 25px;
     border-radius: 5px;
+    font-size: 1.4rem;
+    text-align: center;
 }
 input{
-    height: 25px;
+    height: 27px;
     width: 300px;
     border-radius: 7px;
+    font-size: 1rem;
 }
 button{
-    height: 25px;
+    height: 40px;
+    background-color: rgb(65, 63, 62);
+    color: white;
+    border-radius: 10px;
+    font-size: 1.3rem;
+    transition: all 0.2s ease-in;
 }
+button:hover{
+    cursor: pointer;
+    background-color: rgb(168, 163, 161);
+    color: black;
+    transition: all 0.2s ease-in;
+}
+
 body {
     display: flex;
     flex-direction: column;
