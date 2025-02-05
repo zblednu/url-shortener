@@ -1,36 +1,66 @@
-import express from "express";
 import { get, add } from "./db-layer.js";
-import cors from "cors";
+import http from "node:http";
+import fs from "node:fs";
 
+const server = http.createServer(async (req, res) => {
+  const { method } = req;
+  if (method === "GET") {
+    let { url } = req;
+    if (url === "/") {
+      url = "/index.html";
+    }
+    const resource = url.slice(1);
+    try {
+      const original = await get(resource);
+      res.statusCode = 301;
+      res.setHeader("Location", original);
+      res.end("");
+    } catch(e) {
+      console.error(e);
+      try {
+        const fileContents = fs.readFileSync(`src/${resource}`);
+        res.statusCode = 200;
+        res.end(fileContents);
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.static("src"));
+      } catch(e) {
+        console.error(e);
+        res.statusCode = 404;
+        res.end("");
+      }
+    }
+  }
 
-const port = 3000;
+  else if (method === "POST") {
+    let body = [];
+    req
+      .on("error", err => {
+        console.error(err);
+      })
+      .on("data", chunk => {
+        body.push(chunk);
+      })
+      .on("end", async () => {
+        try {
+          body = JSON.parse(Buffer.concat(body).toString());
+        } catch(e) {
+          console.error(e);
+          res.statusCode = 404;
+          return res.end("");
+        }
 
-app.post("/", async (req, res) => {
-  try {
-    const url = req.body.url;
-    const shortened = await add(url);
+        const original = body.url;
+        if (!original) {
+          res.statusCode = 404;
+          return res.end("");
+        }
 
-    res.status(200).send(JSON.stringify({ "url": shortened}))
-  } catch {
-    res.status(400).send("shit happened");
+        const shortened = await add(original);
+        res.statusCode = 200;
+        res.end(JSON.stringify({ url: shortened }));
+      });
   }
 });
 
-app.get("/*", async (req, res) => {
-  const shortened = req.params[0];
-  try {
-    const original = await get(shortened);
-    res.redirect(original);
-  } catch {
-    res.status(404).send();
-  }
-});
 
-app.listen(port, () => {
-  console.log(`live at ${port}`);
-});
+const PORT = 3000;
+server.listen(PORT);

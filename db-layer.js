@@ -1,8 +1,6 @@
 import process from "node:process";
 import pg from "pg";
 
-
-
 function generateRandomString() {
   const alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
 
@@ -46,7 +44,7 @@ export async function get(shortened) {
   `);
 
   if (!res.rowCount) {
-   throw new Error("no such map"); 
+   throw new Error(`no such map: ${shortened}`); 
   }
 
   return res.rows[0].original;
