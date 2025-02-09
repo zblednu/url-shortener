@@ -5,5 +5,5 @@ sudo su postgres -c '
 	psql -U shortener shortener -c "CREATE TABLE maps ( \
 		id char(8) PRIMARY KEY, \
 		url varchar(800) NOT NULL \
-	)"
+	)";
 '
