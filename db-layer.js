@@ -15,55 +15,46 @@ function generateRandomString() {
 
 export async function add(url) {
   const res = await client.query(`
-    select shortened from maps where original = '${url}';
+    select id from maps where url = '${url}';
   `);
   if (res.rowCount) {
-    return res.rows[0].shortened;
+    return res.rows[0].id;
   }
 
-  let shortened;
+  let id;
   let exists;
   do {
-    shortened = generateRandomString();
+    id = generateRandomString();
 
     exists = await client.query(`
-     select from maps where shortened = '${shortened}';
+     select from maps where id = '${id}';
     `).rowCount;
   } while (exists);
 
   await client.query(`
-    insert into maps values ('${shortened}', '${url}');
+    insert into maps values ('${id}', '${url}');
   `);
 
-  return shortened;
+  return id;
 }
 
-export async function get(shortened) {
+export async function get(id) {
   const res = await client.query(`
-    select original from maps where shortened = '${shortened}';
+    select url from maps where id = '${id}';
   `);
 
   if (!res.rowCount) {
-   throw new Error(`no such map: ${shortened}`); 
+   throw new Error(`no such map: ${id}`); 
   }
 
-  return res.rows[0].original;
+  return res.rows[0].url;
 }
-
-if (process.argv[2] === "get") {
-  console.log(await get(process.argv[3]));
-} 
-else if (process.argv[2] === "add") {
-  console.log(await add(process.argv[3]));
-}
-
-
-
 
 const { Client } = pg;
 
 const client = new Client( {
-  database: "url-shortener",
+  database: "shortener",
+  user: "shortener"
 });
 await client.connect();
 

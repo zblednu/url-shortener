@@ -6,29 +6,32 @@ const server = http.createServer(async (req, res) => {
   const { method } = req;
   if (method === "GET") {
     let { url } = req;
+		console.log(url);
     if (url === "/") {
       url = "/index.html";
     }
     const resource = url.slice(1);
     try {
       const original = await get(resource);
-      res.statusCode = 301;
+			console.log(original);
+			
+
+      res.statusCode = 302;
       res.setHeader("Location", original);
-      res.end("");
+      return res.end("");
+			console.log("ding");
     } catch(e) {
-      console.error(e);
       try {
         const fileContents = fs.readFileSync(`src/${resource}`);
         res.statusCode = 200;
         if (resource.includes("js")) {
           res.setHeader("content-type", "text/javascript");
         }
-        res.end(fileContents);
+        return res.end(fileContents);
 
       } catch(e) {
-        console.error(e);
         res.statusCode = 404;
-        res.end("");
+        return res.end("");
       }
     }
   }
@@ -46,7 +49,6 @@ const server = http.createServer(async (req, res) => {
         try {
           body = JSON.parse(Buffer.concat(body).toString());
         } catch(e) {
-          console.error(e);
           res.statusCode = 404;
           return res.end("");
         }
@@ -66,4 +68,9 @@ const server = http.createServer(async (req, res) => {
 
 
 const PORT = 3000;
+
+process.on("SIGINT", () => {
+	server.close();
+	console.log("server terminated");
+})
 server.listen(PORT);
