@@ -1,6 +1,16 @@
 import { get, add } from "./db-layer.js";
 import http from "node:http";
 import fs from "node:fs";
+import { URL } from "node:url";
+
+function isAbsoluteURL(string) {
+	try {
+		new URL(string);
+		return true;
+	} catch {
+		return false;
+	}
+}
 
 const server = http.createServer( async (req, res) => {
 	switch(req.method) {
@@ -51,10 +61,11 @@ const server = http.createServer( async (req, res) => {
         }
 
         const original = body.url;
-        if (!original) {
+        if (!original || !isAbsoluteURL(original)) {
           res.statusCode = 400;
           return res.end();
         }
+
 
         const shortened = await add(original);
         res.statusCode = 201; //created
