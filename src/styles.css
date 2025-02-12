@@ -1,9 +1,13 @@
-#output{
+#outputlink{
     border: 1px solid black;
-    height: 25px;
+    height: 30px;
     border-radius: 5px;
     font-size: 1.4rem;
     text-align: center;
+}
+a{
+text-decoration: none;
+
 }
 input{
     height: 27px;

@@ -21,10 +21,18 @@ async function Get(){
             },
             body: JSON.stringify(data) 
         });
-    
+	if (res.status === 400) {
+	output.textContent = "Bad Request";
+	return;
+}	
+
+	const currentDom = window.location.origin;
+    	
         const answer = await res.json();
         console.log(answer);
-        output.textContent = "http://localhost:3000/" + answer.url;
+	const shortUrl = currentDom + "/" + answer.url;
+        output.href = shortUrl;
+	output.textContent = shortUrl;
     } catch (error) {
         console.error('Error:', error);
     }
