@@ -16,11 +16,6 @@ const server = http.createServer( async (req, res) => {
 	switch(req.method) {
 		case "GET":
 			let { url } = req;
-			if (url === "/") {
-				res.statusCode = 301; // moved permanently
-				res.setHeader("Location", "/index.html");
-				return res.end();
-			}
 
 			const resource = url.slice(1);
 			try {
@@ -29,17 +24,8 @@ const server = http.createServer( async (req, res) => {
 				res.setHeader("Location", original);
 				return res.end();
 			} catch {
-				try {
-					const fileContents = fs.readFileSync(`src/${resource}`);
-					res.statusCode = 200;
-					if (resource.includes("js")) {
-						res.setHeader("content-type", "text/javascript");
-					}
-					return res.end(fileContents);
-				} catch {
-					res.statusCode = 404;
-					return res.end();
-				}
+        res.statusCode = 404;
+        return res.end();
 			}
 			break;
 
