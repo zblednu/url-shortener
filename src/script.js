@@ -14,7 +14,7 @@ async function Get(){
     input.value = "";
     short.style.display = "block";  
     try {
-        const res = await fetch('http://localhost:3000', {
+        const res = await fetch(window.location.origin, {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'
