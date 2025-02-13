@@ -21,11 +21,7 @@ async function Get(){
         input.value = "";
         return;
     }
-    input.value = "";
-    short.style.display = "block";  
-    setTimeout(() => {
-        short.style.opacity = "1";
-    }, 10);  
+    input.value = "";  
     try {
         const res = await fetch(window.location.origin, {
             method: 'POST', 
