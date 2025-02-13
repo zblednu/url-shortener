@@ -3,16 +3,29 @@ const input = document.getElementById("input");
 const button = document.getElementById("button");
 const short = document.getElementById("short");
 
-window.addEventListener("load", ()=>{
-    short.style.display = "none";
-})
+function Validation(string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
 
 async function Get(){
     const data = {
-        url: input.value
+        url: input.value.trim()
     };
+    if (!Validation(data.url)) {
+        alert("Please enter a valid URL.");
+        input.value = "";
+        return;
+    }
     input.value = "";
     short.style.display = "block";  
+    setTimeout(() => {
+        short.style.opacity = "1";
+    }, 10);  
     try {
         const res = await fetch(window.location.origin, {
             method: 'POST', 
@@ -21,18 +34,19 @@ async function Get(){
             },
             body: JSON.stringify(data) 
         });
-	if (res.status === 400) {
-	output.textContent = "Bad Request";
-	return;
-}	
+
 
 	const currentDom = window.location.origin;
     	
         const answer = await res.json();
         console.log(answer);
-	const shortUrl = currentDom + "/" + answer.url;
+	    const shortUrl = currentDom + "/" + answer.url;
         output.href = shortUrl;
-	output.textContent = shortUrl;
+	    output.textContent = shortUrl;
+        short.style.display = "block";  
+        setTimeout(() => {
+            short.style.opacity = "1";
+        }, 10);  
     } catch (error) {
         console.error('Error:', error);
     }

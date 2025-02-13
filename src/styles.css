@@ -5,15 +5,30 @@
     font-size: 1.4rem;
     text-align: center;
 }
+#short{
+    margin-top: 3%;
+    margin-bottom: 5%;
+    display: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
 a{
-text-decoration: none;
-
+    text-decoration: none;
+    color: rgb(55, 121, 151);
+}
+a:hover{
+    color: rgb(78, 163, 219);
 }
 input{
     height: 27px;
     width: 300px;
     border-radius: 7px;
     font-size: 1rem;
+    border: black 1px solid;
+}
+footer{
+    color: gray;
+    opacity: 0.6;
 }
 button{
     height: 40px;
@@ -35,9 +50,11 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 70vh;
+    height: 100vh;
     background-color: rgb(229 229 229 / var(--tw-bg-opacity, 1));
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 .container{
-    font-size: 2rem;
+    margin-bottom: 20%;
+    font-size: 1.8em;
 }
