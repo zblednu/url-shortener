@@ -20,7 +20,7 @@ const server = http.createServer( async (req, res) => {
 			const resource = url.slice(1);
 			try {
 				const original = await get(resource);
-				res.statusCode = 302;
+				res.statusCode = 301;
 				res.setHeader("Location", original);
 				return res.end();
 			} catch {
