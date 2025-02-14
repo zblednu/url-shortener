@@ -2,6 +2,7 @@ const output = document.getElementById("output");
 const input = document.getElementById("input");
 const button = document.getElementById("button");
 const short = document.getElementById("short");
+const errorMessage = document.getElementById("error-message");
 
 function Validation(string) {
     try {
@@ -17,11 +18,21 @@ async function Get(){
         url: input.value.trim()
     };
     if (!Validation(data.url)) {
-        alert("Please enter a valid URL.");
+        short.style.visibility = "hidden";
+        errorMessage.style.display = "block";
         input.value = "";
         return;
-    }
-    input.value = "";  
+    } 
+    input.value = "";
+    errorMessage.style.display = "none"; 
+    short.style.opacity = "0";
+    short.style.visibility = "visible"; 
+    
+        setTimeout(() => {
+
+            short.style.opacity = "1";
+        }, 10);
+     
     try {
         const res = await fetch(window.location.origin, {
             method: 'POST', 
@@ -36,10 +47,13 @@ async function Get(){
     	
         const answer = await res.json();
         console.log(answer);
+        errorMessage.style.display = "none"; 
 	    const shortUrl = currentDom + "/" + answer.url;
         output.href = shortUrl;
 	    output.textContent = shortUrl;
-        short.style.display = "block";  
+        
+        short.style.opacity = "0";
+        short.style.visibility = "visible"; 
         setTimeout(() => {
             short.style.opacity = "1";
         }, 10);  
