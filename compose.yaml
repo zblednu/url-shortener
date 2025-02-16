@@ -1,45 +1,35 @@
 services:
   proxy:
-    image: nginx:latest
+    build:
+      context: ./proxy
     ports:
       - 80:80
       - 443:443
     volumes:
-      #logs
-      - type: bind
-        source: /var/log/nginx
-        target: /var/log/nginx
-      #static files
-      - type: bind
-        source: ./src
-        target: /usr/share/nginx/html
-      #config
-      - type: bind
-        source: ./nginx.conf
-        target: /etc/nginx/nginx.conf
-      #ssl
-      - type: bind
-        source: /etc/ssl
-        target: /etc/ssl
+      - ./proxy/logs:/var/log/nginx
     networks:
-      - sandbox-network
+      - sandbox
 
-  server:
+  api:
     image: node:latest
     working_dir: /app
     volumes:
       - .:/app
     command: npm i && node server.js
     networks:
-      - sandbox-network
+      - sandbox
 
-  database:
-    image: postgres:latest
-    command: ls
+  db:
+    build:
+      context: ./db
+    volumes:
+      - db-data:/var/lib/postgresql/data
     networks:
-      - sandbox-network
+      - sandbox
 
+volumes:
+  db-data:
 
 networks:
-  sandbox-network:
+  sandbox:
 
