@@ -1,5 +1,6 @@
-import process from "node:process";
 import pg from "pg";
+
+console.log("poggers");
 
 function generateRandomString() {
   const alphabet = 'abcdefghijklmnopqrstuvwxyz1234567890';
@@ -53,8 +54,11 @@ export async function get(id) {
 const { Client } = pg;
 
 const client = new Client( {
-  database: "shortener",
-  user: "shortener"
+  database: "postgres",
+  user: "postgres",
+	password: "secret",
+	port: 5432,
+	host: "db"
 });
 await client.connect();
 

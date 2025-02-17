@@ -1,0 +1,1 @@
+2025/02/17 14:01:07 [emerg] 1#1: cannot load certificate "/etc/ssl/certs/domain.cert.pem": PEM_read_bio_X509_AUX() failed (SSL: error:0480006C:PEM routines::no start line:Expecting: TRUSTED CERTIFICATE)

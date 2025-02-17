@@ -1,35 +1,41 @@
 services:
-  proxy:
-    build:
-      context: ./proxy
+  proxy: 
+    build: ./proxy
+    volumes: 
+     - ./proxy/logs:/var/log/nginx/
+    networks:
+      - sandbox
     ports:
       - 80:80
       - 443:443
-    volumes:
-      - ./proxy/logs:/var/log/nginx
-    networks:
-      - sandbox
 
-  api:
-    image: node:latest
-    working_dir: /app
-    volumes:
-      - .:/app
-    command: npm i && node server.js
-    networks:
-      - sandbox
 
   db:
-    build:
-      context: ./db
+    build: ./db
     volumes:
       - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_HOST_AUTH_METHOD: trust
     networks:
       - sandbox
+    healthcheck:
+      test: ["CMD", "psql", "-U", "postgres", "-qtAc", "SELECT 1;"]
+      retries: 2
+      start_period: 2s
+      start_interval: 5s
 
+  api:
+    build: ./api
+    depends_on: 
+      db:
+        condition: service_healthy
+        restart: true
+    networks:
+      - sandbox
+  
 volumes:
   db-data:
 
 networks:
   sandbox:
-
